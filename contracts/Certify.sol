@@ -1,4 +1,5 @@
 pragma solidity ^0.4.2;
+pragma experimental ABIEncoderV2;
 
 contract Certify
 {
@@ -32,6 +33,11 @@ contract Certify
     function viewUsersCertificates(address identifier) public view returns (Certification[])
     {
         return allUsers[identifier].getCertifications();
+    }
+    
+    function viewUsersCertificateNames(address identifier) public view returns (string[])
+    {
+        return allUsers[identifier].getCertificationNames();
     }
 
 	// identifier is either a address or a username
@@ -70,6 +76,11 @@ contract Certify
 	{
 		return getOrg(msg.sender);
 	}
+	
+	function getUserFromAddress(address identifier) public view returns (User)
+	{
+	    return allUsers[identifier];
+	}
 
 }
 
@@ -94,8 +105,20 @@ contract User
 	{
 		return certificationsRecieved;
 	}
+	
+	function getCertificationNames() returns (string[])
+	{
+	    string[] names;
+	    names.push("a");
+	    names.push("b");
+	   // for(uint i = 0; i < certificationsRecieved.length; i++)
+	   // {
+	   //     names.push(certificationsRecieved[i].getName());
+	   // }
+	    return names;
+	}
 
-	function addToCertificationsRecieved(Certification certificate) payable
+	function addToCertificationsRecieved(Certification certificate) 
 	{
 		certificationsRecieved.push(certificate);
 	}
@@ -121,7 +144,7 @@ contract Org
 	function linkUserWithCertificate(User user, Certification certificate)
 	{
 		user.addToCertificationsRecieved(certificate);
-// 		certificate.addToRecievers(user);
+		certificate.addToRecievers(user);
 	}
 	
 	function viewFirstCertificate() public view returns (Certification)
@@ -146,6 +169,11 @@ contract Certification
 	function addToRecievers(User user)
 	{
 		recievers.push(user);
+	}
+	
+	function getName() returns (string)
+	{
+	    return name;
 	}
 }
 
