@@ -95,7 +95,7 @@ contract User
 		return certificationsRecieved;
 	}
 
-	function addToCertificationsRecieved(Certification certificate)
+	function addToCertificationsRecieved(Certification certificate) payable
 	{
 		certificationsRecieved.push(certificate);
 	}
