@@ -37,7 +37,12 @@ contract Certify
     
     function viewUsersCertificateNames(address identifier) public view returns (string[])
     {
-        return allUsers[identifier].getCertificationNames();
+        string[] names;
+        for(uint i = 0; i < allUsers[identifier].getCertifications().length; i++)
+	    {
+	        names.push(allUsers[identifier].getCertifications()[i].getName());
+	    }
+	    return names;
     }
 
 	// identifier is either a address or a username
@@ -104,18 +109,6 @@ contract User
 	function getCertifications() returns (Certification[])
 	{
 		return certificationsRecieved;
-	}
-	
-	function getCertificationNames() returns (string[])
-	{
-	    string[] names;
-	    names.push("a");
-	    names.push("b");
-	   // for(uint i = 0; i < certificationsRecieved.length; i++)
-	   // {
-	   //     names.push(certificationsRecieved[i].getName());
-	   // }
-	    return names;
 	}
 
 	function addToCertificationsRecieved(Certification certificate) 
