@@ -1,9 +1,33 @@
 pragma solidity ^0.4.2;
 
-contract EntitiyManager
+contract Certify
 {
-	mapping(address => User) allUsers;
-	mapping(address => Org) allOrgs;
+	mapping(address => User) public allUsers;
+	mapping(address => Org) public allOrgs;
+	
+	event print(string value1);
+
+	string public testWord;
+
+	function Certify() public 
+	{
+        testWord = "Blockchain at UCI";
+    }
+
+    function setTestWord() public returns (string)
+    {
+    	testWord = "HI";
+    }
+    
+    function viewTestWord() public view returns (string)
+    {
+        return testWord;
+    }
+    
+    function viewUsersName(address identifier) public view returns (string)
+    {
+        return allUsers[identifier].getName();
+    }
 
 	// identifier is either a address or a username
 	// We'll only use address for now but later add if statement to differentiate
@@ -14,10 +38,11 @@ contract EntitiyManager
 
 	// When user creates an account
 	// Only function that Users call
-	function createNewUser(string _name, string _username)
+	function createNewUser(string _name, string _username) returns (address)
 	{
 		User user = new User(_name, _username);
 		allUsers[msg.sender] = user;
+		return msg.sender;
 	}
 
 	function createNewOrg(string _name)
@@ -41,8 +66,6 @@ contract EntitiyManager
 		return getOrg(msg.sender);
 	}
 
-
-
 }
 
 contract User 
@@ -50,8 +73,13 @@ contract User
 	string name;
 	string username;
 	Certification[] certificationsRecieved;
+	
+	function getName() returns (string)
+	{
+	    return name;
+	}
 
-	function User(string _name, string _username)
+	function User(string _name, string _username) public
 	{
 		name = _name;
 		username = _username;
@@ -74,7 +102,7 @@ contract Org
 	string name;
 	Certification[] certificationsOwned;
 
-	function Org(string _name)
+	function Org(string _name) public
 	{
 		name = _name;
 	}
@@ -99,7 +127,7 @@ contract Certification
 	string description;
 	User[] recievers;
 
-	function Certification(string _name, string _description)
+	function Certification(string _name, string _description) public
 	{
 		name = _name;
 		description = _description;
