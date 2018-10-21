@@ -26,17 +26,17 @@ contract EntitiyManager
 		allOrgs[msg.sender] = org;
 	}
 
-	function getUser(address) returns (User)
+	function getUser(address user_address) returns (User)
 	{
-		return allUsers[address];
+		return allUsers[user_address];
 	}
 
-	function getOrg(address) returns (Org)
+	function getOrg(address org_address) returns (Org)
 	{
-		return allOrgs[address];
+		return allOrgs[org_address];
 	}
 
-	function getCurrentOrg() return (Org)
+	function getCurrentOrg() returns (Org)
 	{
 		return getOrg(msg.sender);
 	}
@@ -57,7 +57,7 @@ contract User
 		username = _username;
 	}
 
-	function getCertifications()
+	function getCertifications() returns (Certification[])
 	{
 		return certificationsRecieved;
 	}
@@ -110,6 +110,4 @@ contract Certification
 		recievers.push(user);
 	}
 }
-
-
 
