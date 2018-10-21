@@ -28,6 +28,11 @@ contract Certify
     {
         return allUsers[identifier].getName();
     }
+    
+    function viewUsersCertificates(address identifier) public view returns (Certification[])
+    {
+        return allUsers[identifier].getCertifications();
+    }
 
 	// identifier is either a address or a username
 	// We'll only use address for now but later add if statement to differentiate
@@ -56,12 +61,12 @@ contract Certify
 		return allUsers[user_address];
 	}
 
-	function getOrg(address org_address) returns (Org)
+	function getOrg(address org_address) public view returns (Org)
 	{
 		return allOrgs[org_address];
 	}
 
-	function getCurrentOrg() returns (Org)
+	function getCurrentOrg() public view returns (Org)
 	{
 		return getOrg(msg.sender);
 	}
@@ -117,6 +122,11 @@ contract Org
 	{
 		user.addToCertificationsRecieved(certificate);
 		certificate.addToRecievers(user);
+	}
+	
+	function viewFirstCertificate() public view returns (Certification)
+	{
+	    return certificationsOwned[0];
 	}
 
 }
