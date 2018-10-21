@@ -63,7 +63,7 @@ contract Certify
 
 	function createNewOrg(string _name)
 	{
-		Org org = new Org(_name);
+		Org org = new Org(_name, msg.sender);
 		allOrgs[msg.sender] = org;
 	}
 
@@ -121,28 +121,54 @@ contract User
 contract Org
 {
 	string name;
+	
+	// address of the creator of the org
+	address addressBelongsTo;
 	Certification[] certificationsOwned;
 
-	function Org(string _name) public
+	function Org(string _name, address _addressBelongsTo) public
 	{
 		name = _name;
+		addressBelongsTo = _addressBelongsTo;
 	}
 
 	function createNewCertificate(string _name, string _description)
 	{
+	    require(msg.sender == addressBelongsTo);
 		Certification certificate = new Certification(_name, _description);
 		certificationsOwned.push(certificate);
 	}
 
 	function linkUserWithCertificate(User user, Certification certificate)
 	{
+	    require(msg.sender == addressBelongsTo);
+	    // need to require that the certification is in the org's certificationsOwned
+	    require(ownsCertification(certificate));
 		user.addToCertificationsRecieved(certificate);
 		certificate.addToRecievers(user);
+	}
+	
+	// determine if certification is inside certificationsOwned
+	function ownsCertification(Certification certificate) returns (bool)
+	{
+	    for (uint i = 0; i < certificationsOwned.length; i++)
+	    {
+	        if (sha256(certificationsOwned[i]) == sha256(certificate))
+	        {
+	            return true;
+	        }
+	    }
+	    return false;
 	}
 	
 	function viewFirstCertificate() public view returns (Certification)
 	{
 	    return certificationsOwned[0];
+	}
+	
+	function viewAllCertificates() public view returns (Certification[])
+	{
+	    return certificationsOwned;
 	}
 
 }
