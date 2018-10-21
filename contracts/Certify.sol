@@ -35,12 +35,22 @@ contract Certify
         return allUsers[identifier].getCertifications();
     }
     
-    function viewUsersCertificateNames(address identifier) public view returns (string[])
+    // function viewUsersCertificateNames(address identifier) public view returns (string[])
+    // {
+    //     string[] names;
+    //     for(uint i = 0; i < allUsers[identifier].getCertifications().length; i++)
+	   //  {
+	   //      names.push(allUsers[identifier].getCertifications()[i].getName());
+	   //  }
+	   //  return names;
+    // }
+
+    function viewUsersCertificateNames(User user) public view returns (string[])
     {
         string[] names;
-        for(uint i = 0; i < allUsers[identifier].getCertifications().length; i++)
+        for(uint i = 0; i < user.getCertifications().length; i++)
 	    {
-	        names.push(allUsers[identifier].getCertifications()[i].getName());
+	        names.push(user.getCertifications()[i].getName());
 	    }
 	    return names;
     }
@@ -132,6 +142,11 @@ contract Org
 		addressBelongsTo = _addressBelongsTo;
 	}
 
+	function getAddressBelongsTo() returns (address)
+	{
+		return addressBelongsTo;
+	}
+
 	function createNewCertificate(string _name, string _description)
 	{
 	    require(msg.sender == addressBelongsTo);
@@ -153,7 +168,7 @@ contract Org
 	{
 	    for (uint i = 0; i < certificationsOwned.length; i++)
 	    {
-	        if (sha256(certificationsOwned[i]) == sha256(certificate))
+	        if (certificationsOwned[i] == certificate)
 	        {
 	            return true;
 	        }
@@ -177,16 +192,19 @@ contract Certification
 {
 	string name;
 	string description;
+	Org orgBelongsTo;
 	User[] recievers;
 
-	function Certification(string _name, string _description) public
+	function Certification(string _name, string _description, Org _orgBelongsTo) public
 	{
 		name = _name;
 		description = _description;
+		orgBelongsTo = _orgBelongsTo;
 	}
 
 	function addToRecievers(User user)
 	{
+		require(msg.sender == orgBelongsTo.getAddressBelongsTo());
 		recievers.push(user);
 	}
 	
