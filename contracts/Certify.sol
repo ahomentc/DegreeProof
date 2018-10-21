@@ -121,7 +121,7 @@ contract Org
 	function linkUserWithCertificate(User user, Certification certificate)
 	{
 		user.addToCertificationsRecieved(certificate);
-		certificate.addToRecievers(user);
+// 		certificate.addToRecievers(user);
 	}
 	
 	function viewFirstCertificate() public view returns (Certification)
